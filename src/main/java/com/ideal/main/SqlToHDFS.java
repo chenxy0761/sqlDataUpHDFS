@@ -47,7 +47,7 @@ public class SqlToHDFS {
         SqlUtil s=new SqlUtil();
         String[] tablesname=s.getTablename().split(";");
         String date = s.getDATE();
-        if (date==null){
+        if (date.equals("")){
             SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
             Date d=new Date();
             Calendar calendar = Calendar.getInstance();
