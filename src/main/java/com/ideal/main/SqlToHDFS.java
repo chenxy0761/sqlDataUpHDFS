@@ -11,6 +11,9 @@ import org.apache.log4j.Logger;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 public class SqlToHDFS {
     private static Logger logger = Logger.getLogger(SqlToHDFS.class);
@@ -43,9 +46,19 @@ public class SqlToHDFS {
     public static void main(String[] args) {
         SqlUtil s=new SqlUtil();
         String[] tablesname=s.getTablename().split(";");
+        String date = s.getDATE();
+        if (date==null){
+            SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+            Date d=new Date();
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(d);
+            calendar.add(Calendar.DAY_OF_MONTH, -1);
+            d = calendar.getTime();
+            date = sdf.format(d);
+        }
         for(String tablename:tablesname) {
         SqlToHDFS fp=new SqlToHDFS();
-            if (fp.SqlToHdfs(SqlServerJDBC.Exp(tablename),tablename)) {
+            if (fp.SqlToHdfs(SqlServerJDBC.Exp(tablename,date),tablename)) {
                 logger.info("OK");
             } else {
                 logger.info("FAIL");
